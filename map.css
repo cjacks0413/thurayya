@@ -41,6 +41,19 @@ path {
   text-align: center;
 }
 
+.english{
+        font-size: 14px;
+        font-family: 'Roboto', Arial, sans-serif;
+}
+.englishTech{
+  font-size: 10px;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+.arabic {
+  font-size: 26px;
+  font-family: 'Lateef', serif;
+}
+
 .custom-popup .leaflet-popup-content-wrapper {
   background:#2c3e50;
   color:#fff;
@@ -60,4 +73,37 @@ path {
   border-left:0px solid transparent;
   border-right:0px solid transparent;
   border-top:15px solid #2c3e50;
+  z-index: -1; 
+  position:relative
 }
+
+.leaflet-label-city {
+  background: rgb(235, 235, 235);
+  background: rgba(235, 235, 235, 0.81);
+  color: #111;
+  display: block;
+  font: 15px/30px "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  padding: 3px 6px;
+  position: absolute;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+
+.leaflet-label-waters {
+  font: 15px/30px "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  position: absolute;
+}
+
+.leaflet-label-regions {
+  font : 20px/45px;
+  font-weight: bold;
+  color: red;
+}
+
