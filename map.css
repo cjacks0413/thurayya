@@ -13,10 +13,22 @@ path,circle,rect,polygon,ellipse,line {
 	font-size:7px;
 }
 
+#search-container #search input {
+  padding: 5px;
+  width: 200px;
+}
+
+#search-container {
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+  left: 50px;
+  margin: 10px;
+}
 
 path {
 	stroke: red;
-	stroke-width: 5px;
+	stroke-width: 1px;
 }
 
 .node {
@@ -42,8 +54,8 @@ path {
 }
 
 .english{
-        font-size: 14px;
-        font-family: 'Roboto', Arial, sans-serif;
+  font-size: 14px;
+  font-family: 'Roboto', Arial, sans-serif;
 }
 .englishTech{
   font-size: 10px;
@@ -106,4 +118,5 @@ path {
   font-weight: bold;
   color: red;
 }
+
 

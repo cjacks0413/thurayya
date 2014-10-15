@@ -18,9 +18,9 @@ var map = new L.Map('map', {
 /*----------------------------------------
  * ROUTES AND SITES LAYERS
  *----------------------------------------*/ 
-var routeLayer = L.layerGroup(); 
+var routeLayer = L.featureGroup(); 
 
-routeLayer.addLayer(L.geoJson(allRoutes)); 
+routeLayer.addLayer(L.geoJson(allRoutes));
 
 /*-----------------------------------------
  * FREQUENCY LIST/DICTIONARY FOR TOPTYPES
@@ -53,20 +53,21 @@ $j.each( places.data, function(_id, _site) {
  *-----------------------------------------------------*/ 
 
 var layerStyles = {
-	"capitals" : { color: '#6F9690', fillColor: '#6F9690', radius: 8, opacity: 0, fillOpacity: .8 }, 
-	"metropoles" : {color: '#6F9690', fillColor: '#6F9690', radius: 15, opacity: 0, fillOpacity: 1}, 
-	"towns" : { color: '#6F9690', fillColor: '#6F9690', radius: 4, opacity: 0, fillOpacity: 1 }, 
-	"villages" : { color: '#6F9690', fillColor: '#6F9690', radius: 4, opacity: 0, fillOpacity: 1 },
-	//add in waystations, smallest, only at certain zoom level 
-	"temp" : { color: '#6F9690', fillColor: '#6F9690', radius: 4, opacity: 0, fillOpacity: 1 } 
+	"villages" : { color: '#e5f5f9', fillColor: '#e5f5f9', radius: 4, opacity: 0, fillOpacity: 1 }, 
+	"towns" : {color: '#e5f5f9', fillColor: '#e5f5f9', radius: 4, opacity: 0, fillOpacity: 1}, 
+	"capitals" : { color: '#99d8c9', fillColor: '#99d8c9', radius: 10, opacity: 0, fillOpacity: 1 }, 
+	"metropoles" : { color: '#2ca25f', fillColor: '#2ca25f', radius: 15, opacity: 0, fillOpacity: 1 },
+	"waystations" : { color: '#6F9690', fillColor: '#6F9690', radius: 2, opacity: 0, fillOpacity: 1 }, 
+	"noCircle" : { color: '#fff', fillColor: '#fff', radius: 0, opacity: 0, fillOpacity: 0}
 }
 
 
 var farthestZoomSites = L.featureGroup(); 
 var middleZoomSites = L.featureGroup(); 
 var closestZoomSites = L.featureGroup(); 
+var allSites = L.featureGroup(); 
 
-addLayerForTopType(sites["sea"], farthestZoomSites, layerStyles["temp"], true, "leaflet-label-waters"); 
+addLayerForTopType(sites["sea"], farthestZoomSites, layerStyles["noCircle"], true, "leaflet-label-waters"); 
 addLayerForTopType(sites["capitals"], farthestZoomSites, layerStyles["capitals"], false, "leaflet-label-city"); 
 addLayerForTopType(sites["metropoles"], farthestZoomSites, layerStyles["metropoles"], true, "leaflet-label-city"); 
 
@@ -82,7 +83,8 @@ function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
 					  .on('click', function() {
 					  	this.bindPopup(createPopup(place)).openPopup(); 
 					  }); 
-		layer.addLayer(marker);  
+		layer.addLayer(marker);
+		allSites.addLayer(marker);   
 	}); 
 }
 
@@ -102,11 +104,12 @@ map.on('zoomend', function() {
 	} else if (map.getZoom() > startZoom && map.getZoom() < 8) {
 		console.log("map zoom is ", map.getZoom()); 
 		addLayerForTopType(sites["towns"], middleZoomSites, layerStyles["towns"], false, "leaflet-label-city"); 
+		addLayerForTopType(sites["villages"], middleZoomSites, layerStyles["towns"], false, "leaflet-label-city"); 
 		middleZoomSites.addTo(map); 
 	}
 	if (map.getZoom() === 8) {
 		console.log("map zoom is 8")
-		addLayerForTopType(sites["temp"], closestZoomSites, layerStyles["temp"], false, "lealet-label-city");
+		addLayerForTopType(sites["waystations"], closestZoomSites, layerStyles["waystations"], false, "lealet-label-city");
 		middleZoomSites.addTo(map);
 	}
 }); 
@@ -117,9 +120,22 @@ var baseMaps = {
 			};
 			var overlayMaps = {
 				"Routes": routeLayer,
-				"Sites": farthestZoomSites
+				"All Sites": allSites, 
 			};
 
-//L.control.layers( baseMaps, overlayMaps ).addTo( map );
+L.control.layers( baseMaps, overlayMaps ).addTo( map );
 
+$j( '#search input' ).on( 'keyup', function() {
+	var matches = filterPlaces($j(this).val(), places.data, ['translitTitle','translitSimpleTitle','arTitle']);
+	allSites.clearLayers();
+	for ( var i=0, ii=matches.length; i<ii; i++ ) {
+		allSites.addLayer(matches[i]); 
+		allSites[matches[i]].openPopup();
+	}
+});
+
+function filterPlaces( needle, sites, keys ) {
+	// of the sites we want to represent on the map, 
+	// search and show only marker for the places that match the query. 
+}
 
