@@ -3,13 +3,15 @@
  *----------------------------------------*/ 
 $j = jQuery; 
 
+var startZoom = 5; 
+
 L.mapbox.accessToken = 'pk.eyJ1IjoiY2phY2tzMDQiLCJhIjoiVFNPTXNrOCJ9.k6TnctaSxIcFQJWZFg0CBA';
 var baseLayer = L.mapbox.tileLayer('cjacks04.jij42jel');
 var map = new L.Map('map', {
 	            center: new L.LatLng( 34, 34 ),
-				zoom: 5,
+				zoom: startZoom,
 				layers: [baseLayer],
-				minZoom: 3,
+				minZoom: 4,
 				maxZoom: 11
 });
 
@@ -56,17 +58,17 @@ var layerStyles = {
 	"towns" : { color: '#6F9690', fillColor: '#6F9690', radius: 4, opacity: 0, fillOpacity: 1 }, 
 	"villages" : { color: '#6F9690', fillColor: '#6F9690', radius: 4, opacity: 0, fillOpacity: 1 },
 	//add in waystations, smallest, only at certain zoom level 
-	"temp" : { color: '#6F9690', fillColor: '#6F9690', radius: 4, opacity: 0, fillOpacity: 0 } 
+	"temp" : { color: '#6F9690', fillColor: '#6F9690', radius: 4, opacity: 0, fillOpacity: 1 } 
 }
 
 
-var sitesLayer = L.layerGroup(); 
+var farthestZoomSites = L.featureGroup(); 
+var middleZoomSites = L.featureGroup(); 
+var closestZoomSites = L.featureGroup(); 
 
-
-addLayerForTopType(sites["capitals"], sitesLayer, layerStyles["capitals"], false, "leaflet-label-city"); 
-addLayerForTopType(sites["metropoles"], sitesLayer, layerStyles["metropoles"], true, "leaflet-label-city"); 
-addLayerForTopType(sites["sea"], sitesLayer, layerStyles["temp"], true, "leaflet-label-waters"); 
-addLayerForTopType(sites["towns"], sitesLayer, layerStyles["towns"], false, "leaflet-label-city"); 
+addLayerForTopType(sites["sea"], farthestZoomSites, layerStyles["temp"], true, "leaflet-label-waters"); 
+addLayerForTopType(sites["capitals"], farthestZoomSites, layerStyles["capitals"], false, "leaflet-label-city"); 
+addLayerForTopType(sites["metropoles"], farthestZoomSites, layerStyles["metropoles"], true, "leaflet-label-city"); 
 
 //sea, dark blue
 //add in island, diff color
@@ -79,8 +81,8 @@ function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
 					  })
 					  .on('click', function() {
 					  	this.bindPopup(createPopup(place)).openPopup(); 
-					  });
-		layer.addLayer(marker); 
+					  }); 
+		layer.addLayer(marker);  
 	}); 
 }
 
@@ -90,14 +92,34 @@ function createPopup(place) {
 	'</span><br><b>Check in:</b> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>; <a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a></center>'
 }
 
+/* We need a function that gets called ON 'ZOOMED' SO THAT WE CHECK #ERRTIME*/
+farthestZoomSites.addTo(map); 
+
+map.on('zoomend', function() {
+	if (map.getZoom() <= startZoom) {
+		map.removeLayer(middleZoomSites);
+		map.removeLayer(closestZoomSites); 
+	} else if (map.getZoom() > startZoom && map.getZoom() < 8) {
+		console.log("map zoom is ", map.getZoom()); 
+		addLayerForTopType(sites["towns"], middleZoomSites, layerStyles["towns"], false, "leaflet-label-city"); 
+		middleZoomSites.addTo(map); 
+	}
+	if (map.getZoom() === 8) {
+		console.log("map zoom is 8")
+		addLayerForTopType(sites["temp"], closestZoomSites, layerStyles["temp"], false, "lealet-label-city");
+		middleZoomSites.addTo(map);
+	}
+}); 
+
+
 var baseMaps = {
 			"IMIW": baseLayer,
 			};
 			var overlayMaps = {
 				"Routes": routeLayer,
-				"Sites": sitesLayer
+				"Sites": farthestZoomSites
 			};
 
-L.control.layers( baseMaps, overlayMaps ).addTo( map );
+//L.control.layers( baseMaps, overlayMaps ).addTo( map );
 
 
