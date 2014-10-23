@@ -11,7 +11,8 @@ var map = new L.Map('map', {
 	            center: new L.LatLng( 34, 34 ),
 				zoom: startZoom,
 				layers: [baseLayer],
-				minZoom: 4,
+				minZoom: 3,
+				zoomControl: true,
 				maxZoom: 11
 });
 
@@ -20,7 +21,7 @@ var map = new L.Map('map', {
  *----------------------------------------*/ 
 var routeLayer = L.featureGroup(); 
 
-routeLayer.addLayer(L.geoJson(allRoutes));
+routeLayer.addLayer(L.geoJson(allRoutes)).addTo(map);
 
 /*-----------------------------------------
  * FREQUENCY LIST/DICTIONARY FOR TOPTYPES
@@ -53,24 +54,25 @@ $j.each( places.data, function(_id, _site) {
  *-----------------------------------------------------*/ 
 
 var layerStyles = {
-	"villages" : { color: '#e5f5f9', fillColor: '#e5f5f9', radius: 4, opacity: 0, fillOpacity: 1 }, 
-	"towns" : {color: '#e5f5f9', fillColor: '#e5f5f9', radius: 4, opacity: 0, fillOpacity: 1}, 
-	"capitals" : { color: '#99d8c9', fillColor: '#99d8c9', radius: 10, opacity: 0, fillOpacity: 1 }, 
-	"metropoles" : { color: '#2ca25f', fillColor: '#2ca25f', radius: 15, opacity: 0, fillOpacity: 1 },
+	"villages" : { color: '#6F9690', fillColor: '#6F9690', radius: 4, opacity: 0, fillOpacity: 1 }, 
+	"towns" : {color: '#6F9690', fillColor: '#6F9690', radius: 4, opacity: 0, fillOpacity: 1}, 
+	"capitals" : { color: '#6F9690', fillColor: '#6F9690', radius: 10, opacity: 0, fillOpacity: 1 }, 
+	"metropoles" : { color: '#6F9690', fillColor: '#6F9690', radius: 15, opacity: 0, fillOpacity: 1 },
 	"waystations" : { color: '#6F9690', fillColor: '#6F9690', radius: 2, opacity: 0, fillOpacity: 1 }, 
 	"noCircle" : { color: '#fff', fillColor: '#fff', radius: 0, opacity: 0, fillOpacity: 0}
 }
 
 
 var farthestZoomSites = L.featureGroup(); 
+var capitalSites = L.featureGroup(); 
 var middleZoomSites = L.featureGroup(); 
 var closestZoomSites = L.featureGroup(); 
 var allSites = L.featureGroup(); 
+var tempSites = L.featureGroup(); 
 
 addLayerForTopType(sites["sea"], farthestZoomSites, layerStyles["noCircle"], true, "leaflet-label-waters"); 
-addLayerForTopType(sites["capitals"], farthestZoomSites, layerStyles["capitals"], false, "leaflet-label-city"); 
 addLayerForTopType(sites["metropoles"], farthestZoomSites, layerStyles["metropoles"], true, "leaflet-label-city"); 
-
+addLayerForTopType(sites["temp"], tempSites, layerStyles["waystations"], false, "leaflet-label-city"); 
 //sea, dark blue
 //add in island, diff color
 function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
@@ -94,22 +96,27 @@ function createPopup(place) {
 	'</span><br><b>Check in:</b> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>; <a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a></center>'
 }
 
-/* We need a function that gets called ON 'ZOOMED' SO THAT WE CHECK #ERRTIME*/
 farthestZoomSites.addTo(map); 
 
 map.on('zoomend', function() {
 	if (map.getZoom() <= startZoom) {
 		map.removeLayer(middleZoomSites);
+		map.removeLayer(capitalSites); 
 		map.removeLayer(closestZoomSites); 
-	} else if (map.getZoom() > startZoom && map.getZoom() < 8) {
-		console.log("map zoom is ", map.getZoom()); 
+	} else if (map.getZoom() == startZoom + 1) {
+		addLayerForTopType(sites["capitals"], capitalSites, layerStyles["capitals"], false, "leaflet-label-city");
+		map.removeLayer(middleZoomSites); 
+		map.removeLayer(closestZoomSites); 
+		capitalSites.addTo(map); 
+	} else if (map.getZoom() > startZoom + 1 && map.getZoom() < 8) {
 		addLayerForTopType(sites["towns"], middleZoomSites, layerStyles["towns"], false, "leaflet-label-city"); 
 		addLayerForTopType(sites["villages"], middleZoomSites, layerStyles["towns"], false, "leaflet-label-city"); 
+		capitalSites.addTo(map); 
 		middleZoomSites.addTo(map); 
 	}
 	if (map.getZoom() === 8) {
-		console.log("map zoom is 8")
 		addLayerForTopType(sites["waystations"], closestZoomSites, layerStyles["waystations"], false, "lealet-label-city");
+		capitalSites.addTo(map); 
 		middleZoomSites.addTo(map);
 	}
 }); 
@@ -120,7 +127,7 @@ var baseMaps = {
 			};
 			var overlayMaps = {
 				"Routes": routeLayer,
-				"All Sites": allSites, 
+				"Temp" : tempSites 
 			};
 
 L.control.layers( baseMaps, overlayMaps ).addTo( map );

@@ -2,10 +2,14 @@ path,circle,rect,polygon,ellipse,line {
     vector-effect: non-scaling-stroke;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
 #map { 
 	position:absolute; 
-	top:0; 
-	bottom:0; 
+  height: 100%;
 	width:100%; 
 }
 
@@ -18,6 +22,19 @@ path,circle,rect,polygon,ellipse,line {
   width: 200px;
 }
 
+#map-title {
+  z-index: 9999;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  background-color: rgba(0,0,0,0.25);
+  font-size: 20px;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-weight: 300;
+  color: #fff;
+}
+
 #search-container {
   z-index: 9999;
   position: absolute;
@@ -28,7 +45,7 @@ path,circle,rect,polygon,ellipse,line {
 
 path {
 	stroke: red;
-	stroke-width: 1px;
+	stroke-width: 2px;
 }
 
 .node {
@@ -111,6 +128,8 @@ path {
   font: 15px/30px "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-weight: bold;
   position: absolute;
+  bottom: 15%;
+  color: #5A5A94; 
 }
 
 .leaflet-label-regions {
