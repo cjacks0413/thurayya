@@ -63,19 +63,26 @@ var layerStyles = {
 	"noCircle" : { color: '#fff', fillColor: '#fff', radius: 0, opacity: 0, fillOpacity: 0}
 }
 
-
-var farthestZoomSites = L.featureGroup(); 
+var layers = []; 
+var farthestZoomSites = L.featureGroup();
+layers.push(farthestZoomSites); 
 var capitalSites = L.featureGroup(); 
+layers.push(capitalSites); 
 var middleZoomSites = L.featureGroup(); 
+layers.push(middleZoomSites);
 var closestZoomSites = L.featureGroup(); 
+layers.push(closestZoomSites);
 var allSites = L.featureGroup(); 
+layers.push(allSites); 
 var tempSites = L.featureGroup(); 
+layers.push(tempSites); 
 
 addLayerForTopType(sites["sea"], farthestZoomSites, layerStyles["noCircle"], true, "leaflet-label-waters"); 
 addLayerForTopType(sites["metropoles"], farthestZoomSites, layerStyles["metropoles"], true, "leaflet-label-city"); 
 addLayerForTopType(sites["temp"], tempSites, layerStyles["waystations"], false, "leaflet-label-city"); 
-//sea, dark blue
-//add in island, diff color
+addLayerForTopType(sites, allSites, layerStyles["noCircle"], false, "leaflet-label-search"); 
+
+
 function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
 	$j.each(topTypes, function(id, place) {
 		var marker = L.circleMarker([place.lat, place.lon], style)
@@ -87,7 +94,6 @@ function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
 					  	this.bindPopup(createPopup(place, this)).openPopup(); 
 					  }); 
 		layer.addLayer(marker);
-		allSites.addLayer(marker);   
 	}); 
 }
 
@@ -153,17 +159,48 @@ var baseMaps = {
 
 L.control.layers( baseMaps, overlayMaps ).addTo( map );
 
-$j( '#search input' ).on( 'keyup', function() {
-	var matches = filterPlaces($j(this).val(), places.data, ['translitTitle','translitSimpleTitle','arTitle']);
-	allSites.clearLayers();
-	for ( var i=0, ii=matches.length; i<ii; i++ ) {
-		allSites.addLayer(matches[i]); 
-		allSites[matches[i]].openPopup();
+$j( '#search input' ).on( 'keypress', function(e) {
+	if (e.which === 13) {
+		var query = $j(this).val().toUpperCase(); 
+		var matches = filterPlaces($j(this).val(), places.data, ['translitTitle','translitSimpleTitle','arTitle']);
+		clearLayers(); 
+		for ( var i=0; i<matches.length; i++ ) {
+			var m = L.circleMarker([matches[i].lat, matches[i].lon], layerStyles["capitals"])
+						  .bindPopup(createPopup(matches[i], this))
+						  .addTo(map);  
+			m.openPopup(); 
+		}
 	}
 });
 
-function filterPlaces( needle, sites, keys ) {
-	// of the sites we want to represent on the map, 
-	// search and show only marker for the places that match the query. 
+function filterPlaces( query, sites, keys ) {
+	var matches = []; 
+	var query =  query.toUpperCase(); 
+	for (var i = 0; i < sites.length; i++ ) {
+		for (var j = 0; j < keys.length; j++ ) {
+			var stack = sites[i][keys[j]].toUpperCase();
+			if (stack.indexOf(query) != -1 ) {
+				matches.push(sites[i]); 
+			}
+		}
+	}
+	return matches
 }
 
+function clearLayers() {
+	for (var i = 0; i < layers.length; i++) {
+		map.removeLayer(layers[i]);  
+	}
+}
+// function filterPlaces( _needle, _obj, _keys ) {
+// 			var matches = [];
+// 			var needle = _needle.toUpperCase();
+// 			for ( var i=0, ii=_obj.length; i<ii; i++ ) {
+// 				for ( var j=0, jj=_keys.length; j<jj; j++ ) {
+// 					var stack = _obj[i][_keys[j]].toUpperCase();
+// 					if ( stack.indexOf( needle ) != -1 ) {
+// 						matches.push( i );
+// 					}
+// 				}
+// 			}
+// 			return matches;

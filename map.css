@@ -139,6 +139,17 @@ path {
   color: red;
 }
 
+.leaflet-label-search {
+  background: rgb(235, 235, 235);
+  background: rgba(235, 235, 235, 0.81);
+  color: #111;
+  display: block;
+  font: 15px/30px "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  padding: 3px 6px;
+  position: absolute;
+}
+
 #index-lookup-content {
   display: none;
   z-index: 9999;
