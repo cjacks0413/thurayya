@@ -51,6 +51,7 @@ $j.each( places.data, function(_id, _site) {
  *					   noHide // true if label should always
  *								be present on the map
  *				  	   labelClass // styling for the label 
+ 
  *-----------------------------------------------------*/ 
 
 var layerStyles = {
@@ -83,20 +84,40 @@ function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
 					    className: labelClass
 					  })
 					  .on('click', function() {
-					  	this.bindPopup(createPopup(place)).openPopup(); 
+					  	this.bindPopup(createPopup(place, this)).openPopup(); 
 					  }); 
 		layer.addLayer(marker);
 		allSites.addLayer(marker);   
 	}); 
 }
 
-function createPopup(place) {
-	return '<center><span class="arabic">' + place.arTitle + 
+function createPopup(place, marker) {
+	var container = $j('<div />'); 
+	container.on("click", function(e) {
+		// generateContent(place)
+		$j("#index-lookup-content").show(); 
+		marker.closePopup(); 
+	}); 
+	container.append('<center><span class="arabic">' + place.arTitle + 
 	'</span><br><span class="english">' + place.translitTitle + 
-	'</span><br><b>Check in:</b> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>; <a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a></center>'
+	'</span><br><b>Check in:</b> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>;<a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a>;<div id="index-lookup" class="basic"><a href="#">Tarikh al-Islam</a></div></center>');
+	return container[0]; 
+}
+
+$j("#close").click(function(e){
+	$j("#index-lookup-content").hide(); 
+});
+
+function generateContent(place) {
+	// var results = lookup (place.arTitle/place.translitTitle) in index file
+	// var content = $j("#index-lookup-content"); 
+	// $j.each(results, function (id, result) {
+	//	content.append("<br>"+result); 
+	//});
 }
 
 farthestZoomSites.addTo(map); 
+
 
 map.on('zoomend', function() {
 	if (map.getZoom() <= startZoom) {
@@ -115,7 +136,7 @@ map.on('zoomend', function() {
 		middleZoomSites.addTo(map); 
 	}
 	if (map.getZoom() === 8) {
-		addLayerForTopType(sites["waystations"], closestZoomSites, layerStyles["waystations"], false, "lealet-label-city");
+		addLayerForTopType(sites["waystations"], closestZoomSites, layerStyles["waystations"], true, "lealet-label-city");
 		capitalSites.addTo(map); 
 		middleZoomSites.addTo(map);
 	}
