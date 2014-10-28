@@ -150,6 +150,10 @@ path {
   position: absolute;
 }
 
+.region-outer {
+  color: #000; 
+}
+
 #index-lookup-content {
   display: none;
   z-index: 9999;
@@ -174,5 +178,6 @@ path {
   color: #f00;
   text-shadow: 2px 2px #000000;
 }
+
 
 

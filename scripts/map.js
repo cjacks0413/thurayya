@@ -126,7 +126,9 @@ farthestZoomSites.addTo(map);
 
 
 map.on('zoomend', function() {
-	if (map.getZoom() <= startZoom) {
+	if (map.getZoom() < startZoom) {
+		map.removeLayer(farthestZoomSites); 
+	} else if (map.getZoom() == startZoom) {
 		map.removeLayer(middleZoomSites);
 		map.removeLayer(capitalSites); 
 		map.removeLayer(closestZoomSites); 
@@ -140,25 +142,20 @@ map.on('zoomend', function() {
 		addLayerForTopType(sites["villages"], middleZoomSites, layerStyles["towns"], false, "leaflet-label-city"); 
 		capitalSites.addTo(map); 
 		middleZoomSites.addTo(map); 
-	}
-	if (map.getZoom() === 8) {
+	} if (map.getZoom() === 8) {
 		addLayerForTopType(sites["waystations"], closestZoomSites, layerStyles["waystations"], true, "lealet-label-city");
 		capitalSites.addTo(map); 
 		middleZoomSites.addTo(map);
 	}
+	
 }); 
 
 
-var baseMaps = {
-			"IMIW": baseLayer,
-			};
-			var overlayMaps = {
-				"Routes": routeLayer,
-				"Temp" : tempSites 
-			};
 
-L.control.layers( baseMaps, overlayMaps ).addTo( map );
 
+/*--------------------------------------------------------
+ * SEARCH 
+ *-------------------------------------------------------*/
 $j( '#search input' ).on( 'keypress', function(e) {
 	if (e.which === 13) {
 		var query = $j(this).val().toUpperCase(); 
@@ -192,15 +189,83 @@ function clearLayers() {
 		map.removeLayer(layers[i]);  
 	}
 }
-// function filterPlaces( _needle, _obj, _keys ) {
-// 			var matches = [];
-// 			var needle = _needle.toUpperCase();
-// 			for ( var i=0, ii=_obj.length; i<ii; i++ ) {
-// 				for ( var j=0, jj=_keys.length; j<jj; j++ ) {
-// 					var stack = _obj[i][_keys[j]].toUpperCase();
-// 					if ( stack.indexOf( needle ) != -1 ) {
-// 						matches.push( i );
-// 					}
-// 				}
-// 			}
-// 			return matches;
+
+/*---------------------------------------------------
+ * REGION HIERARCHIES  
+ *--------------------------------------------------*/
+
+// frequency list for regions
+var sitesByRegion = {}; 
+$j.each( places.data, function(_id, _site) {
+	if (sitesByRegion[_site.source] == undefined) {
+		sitesByRegion[_site.source] = [];
+		sitesByRegion[_site.source].push(_site); 
+	} else {
+		sitesByRegion[_site.source].push(_site); 
+	}
+}); 
+
+var outerRegions = L.featureGroup(); 
+
+createRegionalHierarchy(sitesByRegion, outerRegions, [], [36.862256, 18.303637], "region-outer"); 
+
+function createRegionalHierarchy(places, layer, lines, center, regionClass) {
+	$j.each(places, function(key, value) {
+		//var average = averageCoordinates(value); 
+		lines.push([center, [value[0].lat, value[0].lon]]) // should be average
+	})
+	layer.addLayer(L.multiPolyline(lines)
+					.setStyle({ className: regionClass })); 
+}
+
+
+/*------------------------------------------------------
+ * BASEMAP 
+ *-----------------------------------------------------*/
+var baseMaps = {
+			"IMIW": baseLayer,
+			};
+			var overlayMaps = {
+				"Routes": routeLayer,
+				"Temp" : tempSites,  
+				"Hierarchy" : outerRegions
+			};
+
+L.control.layers( baseMaps, overlayMaps ).addTo( map );
+
+/*
+ * UTIL 
+ */ 
+
+function averageCoordinates(coords) {
+	var sumX = 0, sumY = 0, sumZ = 0; 
+	var length = coords.length; 
+	var lat, lon, hyp;  
+	for (var i = 0; i < length; i++) {
+		// convert to radians
+		lat = coords[i].lat * Math.PI / 180; 
+		lon = coords[i].lon * Math.PI / 180; 
+		
+		var x = Math.cos(lat) * Math.cos(lon); 
+		var y = Math.cos(lat) * Math.sin(lon);
+		var z = Math.sin(lat); 
+
+		sumX += x; 
+		sumY += y; 
+		sumZ += z; 
+	}
+
+	sumX = sumX / length;
+	sumY = sumY / length; 
+	sumZ = sumZ / length; 
+
+	lon = Math.atan2(sumY, sumX);
+	hyp = Math.sqrt(sumX * sumX * sumY * sumY); 
+	lat = Math.atan2(sumZ, hyp);
+
+	return [ (lon * 180 / Math.PI), (lat * 180 / Math.PI)]; 
+}
+
+
+
+
