@@ -100,7 +100,7 @@ function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
 function createPopup(place, marker) {
 	var container = $j('<div />'); 
 	container.on("click", function(e) {
-		// generateContent(place)
+		generateContent(place)
 		$j("#index-lookup-content").show(); 
 		marker.closePopup(); 
 	}); 
@@ -114,13 +114,25 @@ $j("#close").click(function(e){
 	$j("#index-lookup-content").hide(); 
 });
 
+/*-------------------------------------------------
+ * THURAYYA LOOKUP 
+ *------------------------------------------------*/ 
 function generateContent(place) {
-	// var results = lookup (place.arTitle/place.translitTitle) in index file
-	// var content = $j("#index-lookup-content"); 
-	// $j.each(results, function (id, result) {
-	//	content.append("<br>"+result); 
-	//});
+	var id = place.arBW;
+	var lookup = matchIndex[id];
+	$j.each(lookup.exact, function(_id, exact) {
+		$j("exact").append(gazetteers[exact] == undefined ? "" : gazetteers[exact].title + ","); 
+	}); 
+	$j.each(lookup.fuzzy, function(_id, fuzzy) { 
+		$j("#fuzzy").append(gazetteers[fuzzy] == undefined ? "" : gazetteers[fuzzy].title + ","); 	
+	}); 
+	$j.each(lookup.context, function(_id, context) { 
+		$j("#context").append(gazetteers[context] == undefined ? "" : gazetteers[context].title + ","); 	
+	});
+
 }
+
+
 
 farthestZoomSites.addTo(map); 
 
