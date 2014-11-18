@@ -97,6 +97,10 @@ function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
 	}); 
 }
 
+/*-------------------------------------------------
+ * THURAYYA LOOKUP 
+ *------------------------------------------------*/ 
+
 function createPopup(place, marker) {
 	var container = $j('<div />'); 
 	container.on("click", function(e) {
@@ -106,32 +110,55 @@ function createPopup(place, marker) {
 	}); 
 	container.append('<center><span class="arabic">' + place.arTitle + 
 	'</span><br><span class="english">' + place.translitTitle + 
-	'</span><br><b>Check in:</b> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>;<a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a>;<div id="index-lookup" class="basic"><a href="#">Tarikh al-Islam</a></div></center>');
+	'</span><br><b>Check in:</b> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>;<a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a>;<div id="index-lookup" class="basic"><a href="#">Arabic Gazetteer</a></div></center>');
 	return container[0]; 
 }
 
-$j("#close").click(function(e){
-	$j("#index-lookup-content").hide(); 
+/* POPUP NAVIGATION LOGIC */ 
+$j("#close-index").click(function(e){
+	$j("#index-lookup-content").hide();
+});
+$j("#close-match").click(function(e) {
+	$j("#index-lookup-match").hide(); 
 });
 
-/*-------------------------------------------------
- * THURAYYA LOOKUP 
- *------------------------------------------------*/ 
+function displayContextMatches(lookup) {
+	$j.each(lookup.context, function(_id, context) {
+		// thoughts: try .html instead of .append 
+		$j("#context-match").append(gazetteers[context]["text"]); 
+	}); 
+	//loadMatches();
+	//window.open("./context-matches.html", '_blank'); 
+}
+
+function displayMatch(match) {
+	$j("#index-lookup-match").show(); 
+	$j("#match").empty();
+	$j("#match").append(match["text"]); 
+}
+
+var test; 
 function generateContent(place) {
 	var id = place.arBW;
 	var lookup = matchIndex[id];
 	$j.each(lookup.exact, function(_id, exact) {
-		$j("exact").append(gazetteers[exact] == undefined ? "" : gazetteers[exact].title + ","); 
+		$j("#exact").append(gazetteers[exact] == undefined ? "" : 
+							"<a href='#' class='arabic-link'>" + 
+							gazetteers[exact].title +  "<a/> (" + gazetteers[exact].source +
+							") | ")
+							.click(function(e) {
+								displayMatch(gazetteers[exact]); 
+							}); 
 	}); 
 	$j.each(lookup.fuzzy, function(_id, fuzzy) { 
-		$j("#fuzzy").append(gazetteers[fuzzy] == undefined ? "" : gazetteers[fuzzy].title + ","); 	
+		$j("#fuzzy").append(gazetteers[fuzzy] == undefined ? "" : gazetteers[fuzzy].title + " | "); 	
 	}); 
-	$j.each(lookup.context, function(_id, context) { 
-		$j("#context").append(gazetteers[context] == undefined ? "" : gazetteers[context].title + ","); 	
-	});
+	$j("#context-link").click(function(e) {
+		console.log("calling display context matches..."); 
+		displayContextMatches(lookup); 
+	})
 
 }
-
 
 
 farthestZoomSites.addTo(map); 
