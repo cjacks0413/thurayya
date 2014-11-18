@@ -79,6 +79,7 @@ path {
 .english{
   font-size: 14px;
   font-family: 'Roboto', Arial, sans-serif;
+  direction: rtl;
 }
 .englishTech{
   font-size: 10px;
@@ -87,6 +88,7 @@ path {
 .arabic {
   font-size: 26px;
   font-family: 'Lateef', serif;
+  padding: 0;
 }
 
 .custom-popup .leaflet-popup-content-wrapper {
@@ -173,7 +175,7 @@ path {
   bottom: 10%;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.75);
-  overflow: hidden;
+  overflow: scroll;
   float: left;
 }
 
@@ -205,6 +207,12 @@ path {
   color: #f00;
 }
 
+#match {
+  direction: rtl;
+}
 
-
-
+.match-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}

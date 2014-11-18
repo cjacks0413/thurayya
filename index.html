@@ -17,25 +17,18 @@
 		<div id="map-title">title</div> 
 		<div id="index-lookup-content">
 			<div id="close-index" class="close">Close</div></br>
-			<div id="exact" class="arabic">Exact: </div> 
-			<div id="fuzzy" class="arabic">Fuzzy: </div>
-			<div id="context" class="arabic">
-				<a id="context-link">Context Matches</a> 
-			</div>
+			<div class="arabic">Exact: <ul class="match-list" id="exact" ></ul></div> 
+			<div class="arabic">Fuzzy: <ul class="match-list" id="fuzzy"></ul></div>
 		</div>
 		<div class='arabic' id="index-lookup-match"> 
 			<div id="close-match" class="close">Close</div></br>
-			<div id="match"></div> 
+			<div class='arabic' id="match" ></div> 
 		</div>
 		<div class='custom-popup' id='map'></div>
 		<div id="search-container">
 			<form id="search">
 				<input type="text" autocomplete="off" placeholder="Place Filter"/>
 			</form>
-		<div id="context-matches">
-			<h1 class="arabic" id="context-title"></h1>
-			<div id="context-match"></div>
-		</div>
 		<script src="scripts/jquery-1.11.1.js"> </script> 
 		<script src="scripts/leaflet.label.js"></script>
 		<script src="scripts/cornu_all.js"></script>
