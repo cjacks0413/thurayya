@@ -63,36 +63,13 @@ var layerStyles = {
 	"noCircle" : { color: '#fff', fillColor: '#fff', radius: 0, opacity: 0, fillOpacity: 0}
 }
 
-var layers = []; 
-var farthestZoomSites = L.featureGroup();
-layers.push(farthestZoomSites); 
-var capitalSites = L.featureGroup(); 
-layers.push(capitalSites); 
-var middleZoomSites = L.featureGroup(); 
-layers.push(middleZoomSites);
-var closestZoomSites = L.featureGroup(); 
-layers.push(closestZoomSites);
 var allSites = L.featureGroup(); 
-layers.push(allSites); 
-var tempSites = L.featureGroup(); 
-layers.push(tempSites); 
-
-addLayerForTopType(sites["sea"], farthestZoomSites, layerStyles["noCircle"], true, "leaflet-label-waters"); 
-addLayerForTopType(sites["metropoles"], farthestZoomSites, layerStyles["metropoles"], true, "leaflet-label-city"); 
-addLayerForTopType(sites["towns"], middleZoomSites, layerStyles["towns"], false, "leaflet-label-city"); 
-addLayerForTopType(sites["villages"], middleZoomSites, layerStyles["towns"], false, "leaflet-label-city");
-addLayerForTopType(sites["temp"], tempSites, layerStyles["waystations"], false, "leaflet-label-city"); 
-addLayerForTopType(sites["waystations"], closestZoomSites, layerStyles["waystations"], false, "lealet-label-city");
-//addLayerForTopType(sites, allSites, layerStyles["noCircle"], false, "leaflet-label-search"); 
+addLayerForTopType(places.data, allSites, layerStyles["towns"], false, "leaflet-label-search"); 
 
 
 function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
 	$j.each(topTypes, function(id, place) {
 		var marker = L.circleMarker([place.lat, place.lon], style)
-					  .bindLabel(place.arTitle, {
-					  	noHide: noHide,
-					    className: labelClass
-					  })
 					  .on('click', function() {
 					  	this.bindPopup(createPopup(place, this)).openPopup(); 
 					  }); 
@@ -113,7 +90,7 @@ function createPopup(place, marker) {
 	}); 
 	container.append('<center><span class="arabic">' + place.arTitle + 
 	'</span><br><span class="english">' + place.translitTitle + 
-	'</span><br><b>Check in:</b> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>;<a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a>;<div id="index-lookup" class="basic"><a href="#">Arabic Gazetteer</a></div></center>');
+	'</span><br><b>Check in:</b> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>;</br><a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a>;<a href="http://referenceworks.brillonline.com/search?s.q=' + place.translitTitle + '&s.f.s2_parent=s.f.cluster.Encyclopaedia+of+Islam&search-go=Search" target="_blank">Encylopedia Of Islam</a>;<div id="index-lookup" class="basic"><a href="#">Arabic Gazetteer</a></div></center>');
 	return container[0]; 
 }
 
@@ -127,12 +104,12 @@ $j("#close-match").click(function(e) {
 
 
 /* display RTL */ 
-function displayMatch(match) {
+function displayMatch() {
 	$j("#index-lookup-match").show(); 
-	var text = $j("#match"); 
-	text.empty();
-	text.append(match["reference"]);
-	text.append(match["text"]); 
+	// var text = $j("#match"); 
+	// text.empty();
+	// text.append(match["reference"]);
+	// text.append(match["text"]); 
 }
 
 function generateContent(place) {
@@ -141,21 +118,57 @@ function generateContent(place) {
 	/* remove content already in div*/
 	$j("#exact").empty(); 
 	$j("#fuzzy").empty(); 
+	$j("#match").empty();
 	/* hack to turn string array into array of strings */ 
 	var exact_matches = lookup.exact.join().split(","); 
-	console.log("exact matches for " , id , " : " , exact_matches);
 	var fuzzy_matches = lookup.fuzzy.join().split(","); 
+	/* found vs not found */ 
 	$j.each(exact_matches, function(_id, exact) {
-		$j("#exact").append(gazetteers[exact] == undefined ? "" : 
-							"<li><a href='#" + exact + "' class='arabic-link'>" + 
-							gazetteers[exact].title +  "<a/> (" + gazetteers[exact].source +
-							") </li>")
-							.click(function(e) {
-								displayMatch(gazetteers[exact]); 
-							}); 
+		var has_exact_matches = gazetteers[exact] != undefined;
+		if (has_exact_matches) {
+			var link = $j('<a/>', {
+				href  : '#' + exact,  
+				class : 'arabic-link', 
+				html : "<li class=match-list>" + gazetteers[exact].title + " (" + gazetteers[exact].source + ")</li>",
+				click : function() { 
+					displayMatch(); 
+					var id = $j(this).attr('href'); 
+					$j(".match-display").hide(); 
+					$j(id).show();
+				}
+			}).appendTo("#exact"); 
+			var content = $j('<div/>', {
+				id : exact, 
+				html : gazetteers[exact].reference + gazetteers[exact].text, 
+				class : 'match-display'
+			}).appendTo("#match"); 
+		} else {
+			$j("#exact").append("<li> Nothing Found </li>");
+		}
 	}); 
-	$j.each(fuzzy_matches, function(_id, fuzzy) { 
-		$j("#fuzzy").append(gazetteers[fuzzy] == undefined ? "" : gazetteers[fuzzy].title + " | "); 	
+	$j.each(fuzzy_matches, function(_id, fuzzy) {
+		var has_fuzzy_matches = gazetteers[fuzzy] != undefined;  
+		if (has_fuzzy_matches) {
+			var link = $j('<a/>', {
+				href  : '#' + fuzzy,  
+				class : 'arabic-link', 
+				html : "<li class=match-list>" + gazetteers[fuzzy].title + " (" + gazetteers[fuzzy].source + ")</li>",
+				click : function() { 
+					displayMatch(); 
+					var id = $j(this).attr('href'); 
+					$j(".match-display").hide(); 
+					$j(id).show();
+				}
+			}).appendTo("#fuzzy"); 
+			var content = $j('<div/>', {
+				id : fuzzy, 
+				html : gazetteers[fuzzy].reference + gazetteers[fuzzy].text, 
+				class : 'match-display'
+			}).appendTo("#match"); 
+		} else {
+			$j("#fuzzy").append("<li>Nothing Found </li>");
+		}
+
 	}); 
 
 }
@@ -267,8 +280,7 @@ var baseMaps = {
 			};
 			var overlayMaps = {
 				"Routes": routeLayer,
-				"Temp" : tempSites,  
-				"Hierarchy" : outerRegions
+				"Sites" : allSites  
 			};
 
 L.control.layers( baseMaps, overlayMaps ).addTo( map );

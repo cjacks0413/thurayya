@@ -2,6 +2,11 @@ path,circle,rect,polygon,ellipse,line {
     vector-effect: non-scaling-stroke;
 }
 
+@font-face {
+  font-family: "Brill";
+  src: url('./lib/fonts/Brill_Roman.ttf') format("truetype");
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -78,7 +83,7 @@ path {
 
 .english{
   font-size: 14px;
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: 'Brill', Georgia, Arial, sans-serif;
   direction: rtl;
 }
 .englishTech{
@@ -211,6 +216,9 @@ path {
   direction: rtl;
 }
 
+.match-display {
+  display: none;
+}
 .match-list {
   list-style-type: none;
   padding: 0;
