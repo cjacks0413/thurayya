@@ -2,10 +2,10 @@ path,circle,rect,polygon,ellipse,line {
     vector-effect: non-scaling-stroke;
 }
 
-@font-face {
+/*@font-face {
   font-family: "Brill";
   src: url('./lib/fonts/Brill_Roman.ttf') format("truetype");
-}
+}*/
 
 body {
   margin: 0;
@@ -82,17 +82,17 @@ path {
 }
 
 .english{
-  font-size: 14px;
-  font-family: 'Brill', Georgia, Arial, sans-serif;
+  font-size: 20px;
+  font-family: Brill, Gentium, Georgia, Arial, serif;
   direction: rtl;
 }
 .englishTech{
   font-size: 10px;
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: 'Roboto', Arial, serif;
 }
 .arabic {
-  font-size: 26px;
-  font-family: 'Lateef', serif;
+  font-size: 30px;
+  font-family: 'Lateef', 'Geeza Pro', serif;
   padding: 0;
 }
 
@@ -124,8 +124,8 @@ path {
   background: rgba(235, 235, 235, 0.81);
   color: #111;
   display: block;
-  font: 15px/30px "Helvetica Neue", Arial, Helvetica, sans-serif;
-  font-weight: bold;
+  font: 15px/30px 'Brill', 'Gentium', Georgia, serif;
+  font-weight: normal;
   padding: 3px 6px;
   position: absolute;
   -webkit-user-select: none;
@@ -156,7 +156,7 @@ path {
   background: rgba(235, 235, 235, 0.81);
   color: #111;
   display: block;
-  font: 15px/30px "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font: 15px/30px 'Brill', 'Gentium', Georgia, serif;
   font-weight: bold;
   padding: 3px 6px;
   position: absolute;
@@ -171,7 +171,7 @@ path {
   z-index: 9999;
   position: absolute;
   font-size: 15px;
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: 'Brill', 'Gentium', Georgia, serif;
   color: #000;
   width: 43%;
   top: 5%; 
@@ -179,7 +179,8 @@ path {
   height: 90%;
   bottom: 5%;
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.75);
+  /*background-color: rgba(255, 255, 255, 0.75);*/
+  background-color: #FFF;
   overflow: scroll;
   float: left;
 }
@@ -189,7 +190,7 @@ path {
   z-index: 9999;
   position: absolute;
   font-size: 15px;
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: 'Brill', 'Gentium', Georgia, serif;
   color: #000;
   width: 43%;
   top: 5%;
@@ -197,7 +198,8 @@ path {
   bottom: 5%; 
   height: 90%;
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.75);
+  /*background-color: rgba(255, 255, 255, 0.75);*/
+  background-color: #FFF;
   overflow: scroll;
   float: left;
 }
@@ -214,13 +216,22 @@ path {
 
 #match {
   direction: rtl;
+  font-family: 'Lateef', 'Geeza Pro', serif;
 }
 
 .match-display {
   display: none;
+  font-family: 'Lateef', 'Geeza Pro', serif;
 }
+
+.match-display-reference {
+  display: none;
+  font-family: 'Brill', 'Gentium', Georgia, serif;
+}
+
 .match-list {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  direction: rtl;
 }

@@ -104,8 +104,7 @@ function createPopup(place, marker) {
 		marker.closePopup(); 
 	}); 
 	container.append('<center><span class="arabic">' + place.arTitle + 
-	'</span><br><span class="english">' + place.translitTitle + 
-	'</span><br><b>Check in:</b> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>;</br><a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a>;<a href="http://referenceworks.brillonline.com/search?s.q=' + place.translitTitle + '&s.f.s2_parent=s.f.cluster.Encyclopaedia+of+Islam&search-go=Search" target="_blank">Encylopedia Of Islam</a>;<div id="index-lookup" class="basic"><a href="#">Arabic Gazetteer</a></div></center>');
+	'</span><br><span class="english">' + place.translitTitle + '<br><i>Check in:</i><br></span><div id="index-lookup" class="basic"><a href="#">Arabic Gazetteer</a>;</div> <a href="http://referenceworks.brillonline.com/search?s.q='+place.translitSimpleTitle+'&s.f.s2_parent=s.f.cluster.Encyclopaedia+of+Islam&search-go=Search" target="_blank">Encylopaedia of Islam</a>;<br> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>; <a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a></center>');
 	return container[0]; 
 }
 
@@ -155,7 +154,7 @@ function generateContent(place) {
 			var content = $j('<div/>', {
 				id : exact, 
 				html : gazetteers[exact].reference + gazetteers[exact].text, 
-				class : 'match-display'
+				class : 'match-display-reference'
 			}).appendTo("#match"); 
 		} else {
 			$j("#exact").append("Nothing Found");
@@ -178,7 +177,7 @@ function generateContent(place) {
 			var content = $j('<div/>', {
 				id : fuzzy, 
 				html : gazetteers[fuzzy].reference + gazetteers[fuzzy].text, 
-				class : 'match-display'
+				class : 'match-display-reference'
 			}).appendTo("#match"); 
 		} else {
 			$j("#fuzzy").append("Nothing Found");
