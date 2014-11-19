@@ -5,6 +5,7 @@ path,circle,rect,polygon,ellipse,line {
 body {
   margin: 0;
   padding: 0;
+  background-color: rgba(255, 255, 255, 0.75);
 }
 
 
@@ -16,6 +17,10 @@ body {
 
 .text {
 	font-size:7px;
+}
+
+.arabic-link {
+  text-decoration: none;
 }
 
 #search-container #search input {
@@ -74,6 +79,7 @@ path {
 .english{
   font-size: 14px;
   font-family: 'Roboto', Arial, sans-serif;
+  direction: rtl;
 }
 .englishTech{
   font-size: 10px;
@@ -82,6 +88,7 @@ path {
 .arabic {
   font-size: 26px;
   font-family: 'Lateef', serif;
+  padding: 0;
 }
 
 .custom-popup .leaflet-popup-content-wrapper {
@@ -160,24 +167,52 @@ path {
   position: absolute;
   font-size: 15px;
   font-family: 'Roboto', Arial, sans-serif;
-  color: #fff;
-  width: 35%;
-  top: 20%;
-  left: 10%;
-  bottom: 20%;
-  height: 50%;
+  color: #000;
+  width: 43%;
+  top: 10%; 
+  left: 5%;
+  height: 80%;
+  bottom: 10%;
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.75);
-  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.75);
+  overflow: scroll;
   float: left;
 }
 
-#close {
+#index-lookup-match {
+  display: none;
+  z-index: 9999;
+  position: absolute;
+  font-size: 15px;
+  font-family: 'Roboto', Arial, sans-serif;
+  color: #000;
+  width: 43%;
+  top: 10%;
+  right: 5%;
+  bottom: 10%; 
+  height: 80%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.75);
+  overflow: scroll;
+  float: left;
+}
+
+#context-matches {
+  display: none;
+}
+
+.close {
   z-index: 9999;
   float: right;
   color: #f00;
-  text-shadow: 2px 2px #000000;
 }
 
+#match {
+  direction: rtl;
+}
 
-
+.match-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
