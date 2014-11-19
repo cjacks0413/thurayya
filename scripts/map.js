@@ -147,7 +147,7 @@ function generateContent(place) {
 	var fuzzy_matches = lookup.fuzzy.join().split(","); 
 	$j.each(exact_matches, function(_id, exact) {
 		$j("#exact").append(gazetteers[exact] == undefined ? "" : 
-							"<li><a href='#' class='arabic-link'>" + 
+							"<li><a href='#" + exact + "' class='arabic-link'>" + 
 							gazetteers[exact].title +  "<a/> (" + gazetteers[exact].source +
 							") </li>")
 							.click(function(e) {
