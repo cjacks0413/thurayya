@@ -143,7 +143,7 @@ function generateContent(place) {
 				class : 'match-display'
 			}).appendTo("#match"); 
 		} else {
-			$j("#exact").append("<li> Nothing Found </li>");
+			$j("#exact").append("Nothing Found");
 		}
 	}); 
 	$j.each(fuzzy_matches, function(_id, fuzzy) {
@@ -166,7 +166,7 @@ function generateContent(place) {
 				class : 'match-display'
 			}).appendTo("#match"); 
 		} else {
-			$j("#fuzzy").append("<li>Nothing Found </li>");
+			$j("#fuzzy").append("Nothing Found");
 		}
 
 	}); 
