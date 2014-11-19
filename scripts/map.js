@@ -147,7 +147,7 @@ function generateContent(place) {
 				click : function() { 
 					displayMatch(); 
 					var id = $j(this).attr('href'); 
-					$j(".match-display").hide(); 
+					$j(".match-display-reference").hide(); 
 					$j(id).show();
 				}
 			}).appendTo("#exact"); 
