@@ -2,6 +2,11 @@ path,circle,rect,polygon,ellipse,line {
     vector-effect: non-scaling-stroke;
 }
 
+@font-face {
+  font-family: "Brill";
+  src: url('./lib/fonts/Brill_Roman.ttf') format("truetype");
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -42,7 +47,7 @@ body {
 }
 
 #search-container {
-  z-index: 9999;
+  z-index: 8888;
   position: absolute;
   top: 0;
   left: 50px;
@@ -78,7 +83,7 @@ path {
 
 .english{
   font-size: 14px;
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: 'Brill', Georgia, Arial, sans-serif;
   direction: rtl;
 }
 .englishTech{
@@ -169,10 +174,10 @@ path {
   font-family: 'Roboto', Arial, sans-serif;
   color: #000;
   width: 43%;
-  top: 10%; 
+  top: 5%; 
   left: 5%;
-  height: 80%;
-  bottom: 10%;
+  height: 90%;
+  bottom: 5%;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.75);
   overflow: scroll;
@@ -187,10 +192,10 @@ path {
   font-family: 'Roboto', Arial, sans-serif;
   color: #000;
   width: 43%;
-  top: 10%;
+  top: 5%;
   right: 5%;
-  bottom: 10%; 
-  height: 80%;
+  bottom: 5%; 
+  height: 90%;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.75);
   overflow: scroll;
@@ -211,6 +216,9 @@ path {
   direction: rtl;
 }
 
+.match-display {
+  display: none;
+}
 .match-list {
   list-style-type: none;
   padding: 0;
