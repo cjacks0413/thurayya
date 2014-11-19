@@ -23,6 +23,21 @@ var routeLayer = L.featureGroup();
 
 routeLayer.addLayer(L.geoJson(allRoutes)).addTo(map);
 
+/*
+	HEATMAP
+*/
+var cfg = L.TileLayer.heatMap({
+				radius: 12,
+				opacity: 0.8,
+				gradient: {
+					0.45: "rgb(0,0,255)",
+					0.55: "rgb(0,255,255)",
+					0.65: "rgb(0,255,0)",
+					0.95: "yellow",
+					1.0: "rgb(255,0,0)"
+				}
+			});
+//heatmapLayer.addData( places.data )
 /*-----------------------------------------
  * FREQUENCY LIST/DICTIONARY FOR TOPTYPES
  *-----------------------------------------*/
@@ -280,7 +295,8 @@ var baseMaps = {
 			};
 			var overlayMaps = {
 				"Routes": routeLayer,
-				"Sites" : allSites  
+				"Sites" : allSites
+				//"Heatmap" : heatmapLayer 
 			};
 
 L.control.layers( baseMaps, overlayMaps ).addTo( map );
