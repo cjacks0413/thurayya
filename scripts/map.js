@@ -20,8 +20,13 @@ var map = new L.Map('map', {
  * ROUTES AND SITES LAYERS
  *----------------------------------------*/ 
 var routeLayer = L.featureGroup(); 
-
-routeLayer.addLayer(L.geoJson(allRoutes)).addTo(map);
+var routeStyle = {
+    "color": "#ff7800",
+    "weight": 5,
+    "opacity": 0.65
+};
+routeLayer.addLayer(L.geoJson(allRoutes, { 
+								style: routeStyle})).addTo(map);
 
 /*
 	HEATMAP
@@ -75,11 +80,12 @@ var layerStyles = {
 	"capitals" : { color: '#6F9690', fillColor: '#6F9690', radius: 10, opacity: 0, fillOpacity: 1 }, 
 	"metropoles" : { color: '#6F9690', fillColor: '#6F9690', radius: 15, opacity: 0, fillOpacity: 1 },
 	"waystations" : { color: '#6F9690', fillColor: '#6F9690', radius: 2, opacity: 0, fillOpacity: 1 }, 
-	"noCircle" : { color: '#fff', fillColor: '#fff', radius: 0, opacity: 0, fillOpacity: 0}
+	"noCircle" : { color: '#fff', fillColor: '#fff', radius: 0, opacity: 0, fillOpacity: 0},
+	"allDefault" : { color: '#96190E', fillColor: '#fff', radius: 2, opacity: 1, fillOpacity: 1 }
 }
 
 var allSites = L.featureGroup(); 
-addLayerForTopType(places.data, allSites, layerStyles["towns"], false, "leaflet-label-search"); 
+addLayerForTopType(places.data, allSites, layerStyles["allDefault"], false, "leaflet-label-search"); 
 
 
 function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
@@ -153,7 +159,8 @@ function generateContent(place) {
 			}).appendTo("#exact"); 
 			var content = $j('<div/>', {
 				id : exact, 
-				html : gazetteers[exact].reference + gazetteers[exact].text, 
+				/*  CHANGE CLASS FOR REFERENCE HERE! */
+				html : "<div class='english'>" + gazetteers[exact].reference + "</div>" + gazetteers[exact].text, 
 				class : 'match-display-reference'
 			}).appendTo("#match"); 
 		} else {
