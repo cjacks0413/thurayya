@@ -93,8 +93,8 @@ body {
   font-family: 'Roboto', Arial, serif;
 }
 .arabic {
-  font-size: 30px;
-  font-family: 'Lateef', 'Geeza Pro', serif;
+  font-size: 25px;
+  font-family: 'DroidArabicNaskhRegular', 'Lateef', 'Geeza Pro', serif;
   padding: 0;
 }
 
@@ -175,14 +175,14 @@ body {
   font-size: 15px;
   font-family: 'Brill', 'Gentium', Georgia, serif;
   color: #000;
-  width: 43%;
-  top: 5%; 
+  width: 20%;
+  top: 10%; 
   left: 5%;
-  height: 90%;
-  bottom: 5%;
+  height: 80%;
+  bottom: 10%;
   padding: 10px;
-  /*background-color: rgba(255, 255, 255, 0.75);*/
-  background-color: #FFF;
+  background-color: rgba(255, 255, 255, 0.8);
+  /*background-color: #FFF;*/
   overflow: scroll;
   float: left;
 }
@@ -194,14 +194,14 @@ body {
   font-size: 15px;
   font-family: 'Brill', 'Gentium', Georgia, serif;
   color: #000;
-  width: 43%;
-  top: 5%;
+  width: 65%;
+  top: 10%;
   right: 5%;
-  bottom: 5%; 
-  height: 90%;
+  bottom: 10%; 
+  height: 80%;
   padding: 10px;
-  /*background-color: rgba(255, 255, 255, 0.75);*/
-  background-color: #FFF;
+  background-color: rgba(255, 255, 255, 0.9);
+  /*background-color: #FFF;*/
   overflow: scroll;
   float: left;
 }
@@ -218,17 +218,17 @@ body {
 
 #match {
   direction: rtl;
-  font-family: 'Lateef', 'Geeza Pro', serif;
+  font-family: 'DroidArabicNaskhRegular', 'Brill', 'Georgia', 'Lateef', 'Geeza Pro', serif;
 }
 
 .match-display {
   display: none;
-  font-family: 'Lateef', 'Geeza Pro', serif;
+  font-family: 'DroidArabicNaskhRegular', 'Brill', 'Georgia', 'Lateef', 'Geeza Pro', serif;
 }
 
 .match-display-reference {
   display: none;
-  font-family: 'Brill', 'Gentium', Georgia, serif;
+  font-family: 'DroidArabicNaskhRegular', 'Brill', 'Georgia', 'Lateef', 'Geeza Pro', serif;
 }
 
 .match-list {
