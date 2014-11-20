@@ -91,13 +91,15 @@ var allSites = L.featureGroup();
 $j.each( places.data, function( _idx, _place ) {
 	markers[ _idx ] = L.circleMarker( [ _place.lat, _place.lon ], layerStyles["allDefault"])
 		               .bindPopup(createPopup(_place, this)) 
-					   .on('click', function() {
+					   .on('mouseover', function() {
 					   		this.openPopup(); 
-					   });
+					   })
+					   .on('mouseleave', function() {
+					   		this.closePopup(); 
+					   })
 	addMarker( _idx, markers, allSites);
 });
 
-console.log(markers);
 
 allSites.addTo(map);
 /*-------------------------------------------------
