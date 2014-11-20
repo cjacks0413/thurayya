@@ -214,6 +214,7 @@ body {
   z-index: 9999;
   float: right;
   color: #f00;
+  cursor : pointer;
 }
 
 #match {
