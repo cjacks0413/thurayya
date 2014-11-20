@@ -113,7 +113,7 @@ function createPopup(place, marker) {
 	container.on("click", function(e) {
 		generateContent(place)
 		$j("#index-lookup-content").show(); 
-		marker.closePopup(); 
+		// marker.closePopup(); undefined for now ... 
 	}); 
 	container.append('<center><span class="arabic">' + place.arTitle + 
 	'</span><br><br><span class="english">' + place.translitTitle + '<br><i>Check in:</i><br></span><div id="index-lookup" class="basic"><a href="#">Arabic Sources</a>;</div> <a href="http://referenceworks.brillonline.com/search?s.q='+place.eiSearch+'&s.f.s2_parent=s.f.cluster.Encyclopaedia+of+Islam&search-go=Search" target="_blank">Encylopaedia of Islam</a>;<br> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>; <a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a></center>');
@@ -206,7 +206,6 @@ $j( '#search input' ).on( 'keyup', function() {
 	allSites.clearLayers();
 	for ( var i=0, ii=matches.length; i<ii; i++ ) {
 		addMarker( matches[i], markers, allSites );
-		//markers[ matches[i] ].openPopup();
 	}
 });
 
