@@ -1,4 +1,3 @@
-
 var places = { data:[
 {
     "source": "cornu1",
