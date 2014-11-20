@@ -16,6 +16,7 @@ var map = new L.Map('map', {
 				maxZoom: 11
 });
 
+var markers = []; 
 /*----------------------------------------
  * ROUTES AND SITES LAYERS
  *----------------------------------------*/ 
@@ -86,19 +87,19 @@ var layerStyles = {
 }
 
 var allSites = L.featureGroup(); 
-addLayerForTopType(places.data, allSites, layerStyles["allDefault"], false, "leaflet-label-search"); 
 
+$j.each( places.data, function( _idx, _place ) {
+	markers[ _idx ] = L.circleMarker( [ _place.lat, _place.lon ], layerStyles["allDefault"])
+		               .bindPopup(createPopup(_place, this)) 
+					   .on('click', function() {
+					   		this.openPopup(); 
+					   });
+	addMarker( _idx, markers, allSites);
+});
 
-function addLayerForTopType(topTypes, layer, style, noHide, labelClass) {
-	$j.each(topTypes, function(id, place) {
-		var marker = L.circleMarker([place.lat, place.lon], style)
-					  .on('click', function() {
-					  	this.bindPopup(createPopup(place, this)).openPopup(); 
-					  }); 
-		layer.addLayer(marker).addTo(map);
-	}); 
-}
+console.log(markers);
 
+allSites.addTo(map);
 /*-------------------------------------------------
  * THURAYYA LOOKUP 
  *------------------------------------------------*/ 
@@ -124,15 +125,6 @@ $j("#close-match").click(function(e) {
 });
 
 
-/* display RTL */ 
-function displayMatch() {
-	$j("#index-lookup-match").show(); 
-	// var text = $j("#match"); 
-	// text.empty();
-	// text.append(match["reference"]);
-	// text.append(match["text"]); 
-}
-
 function generateContent(place) {
 	var id = place.arBW;
 	var lookup = matchIndex[id];
@@ -152,7 +144,7 @@ function generateContent(place) {
 				class : 'arabic-link', 
 				html : "<li class=match-list>" + gazetteers[exact].title + " (" + gazetteers[exact].source + ")</li>",
 				click : function() { 
-					displayMatch(); 
+					$j("#index-lookup-match").show();  
 					var id = $j(this).attr('href'); 
 					$j(".match-display-reference").hide(); 
 					$j(id).show();
@@ -197,101 +189,37 @@ function generateContent(place) {
 
 
 
-/* change what's shown on zoom level. 
-farthestZoomSites.addTo(map); 
-
-map.on('zoomend', function() {
-	if (map.getZoom() < startZoom) {
-		map.removeLayer(farthestZoomSites); 
-	} else if (map.getZoom() == startZoom) {
-		map.removeLayer(middleZoomSites);
-		map.removeLayer(capitalSites); 
-		map.removeLayer(closestZoomSites); 
-	} else if (map.getZoom() == startZoom + 1) {
-		addLayerForTopType(sites["capitals"], capitalSites, layerStyles["capitals"], false, "leaflet-label-city");
-		map.removeLayer(middleZoomSites); 
-		map.removeLayer(closestZoomSites); 
-		capitalSites.addTo(map); 
-	} else if (map.getZoom() > startZoom + 1 && map.getZoom() < 8) {
-		addLayerForTopType(sites["towns"], middleZoomSites, layerStyles["towns"], false, "leaflet-label-city"); 
-		addLayerForTopType(sites["villages"], middleZoomSites, layerStyles["towns"], false, "leaflet-label-city"); 
-		capitalSites.addTo(map); 
-		middleZoomSites.addTo(map); 
-	} if (map.getZoom() === 8) {
-		addLayerForTopType(sites["waystations"], closestZoomSites, layerStyles["waystations"], true, "lealet-label-city");
-		capitalSites.addTo(map); 
-		middleZoomSites.addTo(map);
-	}
-	
-}); */ 
-
-
-
-
 /*--------------------------------------------------------
  * SEARCH 
  *-------------------------------------------------------*/
-$j( '#search input' ).on( 'keypress', function(e) {
-	if (e.which === 13) {
-		var query = $j(this).val().toUpperCase(); 
-		var matches = filterPlaces($j(this).val(), places.data, ['translitTitle','translitSimpleTitle','arTitle']);
-		clearLayers(); 
-		for ( var i=0; i<matches.length; i++ ) {
-			var m = L.circleMarker([matches[i].lat, matches[i].lon], layerStyles["capitals"])
-						  .bindPopup(createPopup(matches[i], this))
-						  .addTo(map);  
-			m.openPopup(); 
-		}
+function addMarker( _idx, _markers, _layer ) {
+	_layer.addLayer( _markers[_idx] );
+	return _markers[ _idx ]
+}
+
+$j( '#search input' ).on( 'keyup', function() {
+	var matches = filterPlaces( $j( this ).val(), places.data, ['translitTitle','translitSimpleTitle','arTitle','topURI','topType'] );
+	allSites.clearLayers();
+	for ( var i=0, ii=matches.length; i<ii; i++ ) {
+		addMarker( matches[i], markers, allSites );
+		//markers[ matches[i] ].openPopup();
 	}
 });
 
-function filterPlaces( query, sites, keys ) {
-	var matches = []; 
-	var query =  query.toUpperCase(); 
-	for (var i = 0; i < sites.length; i++ ) {
-		for (var j = 0; j < keys.length; j++ ) {
-			var stack = sites[i][keys[j]].toUpperCase();
-			if (stack.indexOf(query) != -1 ) {
-				matches.push(sites[i]); 
+function filterPlaces( _needle, _obj, _keys ) {
+	var matches = [];
+	var needle = _needle.toUpperCase();
+	for ( var i=0, ii=_obj.length; i<ii; i++ ) {
+		for ( var j=0, jj=_keys.length; j<jj; j++ ) {
+			var stack = _obj[i][_keys[j]].toUpperCase();
+			if ( stack.indexOf( needle ) != -1 ) {
+				matches.push( i );
 			}
 		}
 	}
-	return matches
+	return matches;
 }
 
-function clearLayers() {
-	for (var i = 0; i < layers.length; i++) {
-		map.removeLayer(layers[i]);  
-	}
-}
-
-/*---------------------------------------------------
- * REGION HIERARCHIES  
- *--------------------------------------------------*/
-
-// frequency list for regions
-var sitesByRegion = {}; 
-$j.each( places.data, function(_id, _site) {
-	if (sitesByRegion[_site.source] == undefined) {
-		sitesByRegion[_site.source] = [];
-		sitesByRegion[_site.source].push(_site); 
-	} else {
-		sitesByRegion[_site.source].push(_site); 
-	}
-}); 
-
-var outerRegions = L.featureGroup(); 
-
-createRegionalHierarchy(sitesByRegion, outerRegions, [], [36.862256, 18.303637], "region-outer"); 
-
-function createRegionalHierarchy(places, layer, lines, center, regionClass) {
-	$j.each(places, function(key, value) {
-		//var average = averageCoordinates(value); 
-		lines.push([center, [value[0].lat, value[0].lon]]) // should be average
-	})
-	layer.addLayer(L.multiPolyline(lines)
-					.setStyle({ className: regionClass })); 
-}
 
 
 /*------------------------------------------------------
@@ -303,43 +231,9 @@ var baseMaps = {
 			var overlayMaps = {
 				"Routes": routeLayer,
 				"Sites" : allSites
-				//"Heatmap" : heatmapLayer 
 			};
 
 L.control.layers( baseMaps, overlayMaps ).addTo( map );
-
-/*
- * UTIL 
- */ 
-
-function averageCoordinates(coords) {
-	var sumX = 0, sumY = 0, sumZ = 0; 
-	var length = coords.length; 
-	var lat, lon, hyp;  
-	for (var i = 0; i < length; i++) {
-		// convert to radians
-		lat = coords[i].lat * Math.PI / 180; 
-		lon = coords[i].lon * Math.PI / 180; 
-		
-		var x = Math.cos(lat) * Math.cos(lon); 
-		var y = Math.cos(lat) * Math.sin(lon);
-		var z = Math.sin(lat); 
-
-		sumX += x; 
-		sumY += y; 
-		sumZ += z; 
-	}
-
-	sumX = sumX / length;
-	sumY = sumY / length; 
-	sumZ = sumZ / length; 
-
-	lon = Math.atan2(sumY, sumX);
-	hyp = Math.sqrt(sumX * sumX * sumY * sumY); 
-	lat = Math.atan2(sumZ, hyp);
-
-	return [ (lon * 180 / Math.PI), (lat * 180 / Math.PI)]; 
-}
 
 
 
