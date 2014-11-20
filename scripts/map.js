@@ -85,7 +85,8 @@ var layerStyles = {
 	"metropoles" : { color: '#6F9690', fillColor: '#6F9690', radius: 15, opacity: 0, fillOpacity: 1 },
 	"waystations" : { color: '#6F9690', fillColor: '#6F9690', radius: 2, opacity: 0, fillOpacity: 1 }, 
 	"noCircle" : { color: '#fff', fillColor: '#fff', radius: 0, opacity: 0, fillOpacity: 0},
-	"allDefault" : { color: '#96190E', fillColor: '#fff', radius: 2, opacity: 1, fillOpacity: 1 }
+	"allDefault" : { color: '#96190E', fillColor: '#fff', radius: 2, opacity: 1, fillOpacity: 1 },
+	"allDefaultMatch" : { color: '#96190E', fillColor: '#fff', radius: 5, opacity: 1, fillOpacity: 1 },
 }
 
 var allSites = L.featureGroup(); 
@@ -102,8 +103,8 @@ $j.each( places.data, function( _idx, _place ) {
 	addMarker( _idx, markers, allSites);
 });
 
-
 allSites.addTo(map);
+
 /*-------------------------------------------------
  * THURAYYA LOOKUP 
  *------------------------------------------------*/ 
@@ -232,7 +233,7 @@ var baseMaps = {
 			};
 			var overlayMaps = {
 				"Routes": routeLayer,
-				"Sites" : allSites
+				"Sites" : allSites,
 			};
 
 L.control.layers( baseMaps, overlayMaps ).addTo( map );

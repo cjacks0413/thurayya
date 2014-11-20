@@ -10,9 +10,8 @@ path,circle,rect,polygon,ellipse,line {
 body {
   margin: 0;
   padding: 0;
-  background-color: rgba(255, 255, 255, 0.75);
+  *background-color: rgba(255, 255, 255, 0.75);*
 }
-
 
 #map { 
 	position:absolute; 
@@ -108,6 +107,18 @@ body {
   line-height: 38px;
 }
 
+.english-credits{
+  font-size: 14px;
+  font-family: Brill, Gentium, Georgia, Arial, serif;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  /*left: 0;*/
+  padding: 10px 10px 10px 0px;
+  color: 'grey';
+  /*text-align: center;*/
+}
+
 
 .englishTech{
   font-size: 10px;
@@ -129,6 +140,8 @@ body {
   direction: rtl;
   line-height: 32px;
 }
+
+
 
 /* CUSTOM POPUPU 
 .custom-popup .leaflet-popup-content-wrapper {
