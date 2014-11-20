@@ -6,7 +6,9 @@ $j = jQuery;
 var startZoom = 5; 
 
 L.mapbox.accessToken = 'pk.eyJ1IjoiY2phY2tzMDQiLCJhIjoiVFNPTXNrOCJ9.k6TnctaSxIcFQJWZFg0CBA';
-var baseLayer = L.mapbox.tileLayer('cjacks04.jij42jel');
+var baseLayer = L.mapbox.tileLayer('cjacks04.jij42jel', { 
+		attribution: 'Tiles and Data &copy; 2013 <a href="http://www.awmc.unc.edu" target="_blank">AWMC</a> ' +
+				     '<a href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US" target="_blank">CC-BY-NC 3.0</a>' });
 var map = new L.Map('map', {
 	            center: new L.LatLng( 34, 34 ),
 				zoom: startZoom,
