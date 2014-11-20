@@ -8,7 +8,7 @@ var startZoom = 5;
 L.mapbox.accessToken = 'pk.eyJ1IjoiY2phY2tzMDQiLCJhIjoiVFNPTXNrOCJ9.k6TnctaSxIcFQJWZFg0CBA';
 var baseLayer = L.mapbox.tileLayer('cjacks04.jij42jel');
 var map = new L.Map('map', {
-	            center: new L.LatLng( 34, 34 ),
+	            center: new L.LatLng( 28, 41 ),
 				zoom: startZoom,
 				layers: [baseLayer],
 				minZoom: 3,
@@ -22,7 +22,7 @@ var markers = [];
  *----------------------------------------*/ 
 var routeLayer = L.featureGroup(); 
 var routeStyle = {
-    "color": "#f00",
+    "color": "red",
     "weight": 1.5,
     "opacity": 1, 
     "smoothFactor" : 2
@@ -91,7 +91,7 @@ var allSites = L.featureGroup();
 $j.each( places.data, function( _idx, _place ) {
 	markers[ _idx ] = L.circleMarker( [ _place.lat, _place.lon ], layerStyles["allDefault"])
 		               .bindPopup(createPopup(_place, this)) 
-					   .on('mouseover', function() {
+					   .on('click', function() {
 					   		this.openPopup(); 
 					   })
 					   .on('mouseleave', function() {
@@ -114,7 +114,7 @@ function createPopup(place, marker) {
 		marker.closePopup(); 
 	}); 
 	container.append('<center><span class="arabic">' + place.arTitle + 
-	'</span><br><br><span class="english">' + place.translitTitle + '<br><i>Check in:</i><br></span><div id="index-lookup" class="basic"><a href="#">Arabic Sources</a>;</div> <a href="http://referenceworks.brillonline.com/search?s.q='+place.eiSearch+'&s.f.s2_parent=s.f.cluster.Encyclopaedia+of+Islam&search-go=Search" target="_blank">Encylopaedia of Islam</a>;<br> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>; <a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a></center>');
+	'</span><br><br><span class="english">' + place.translitTitle + '<br><br><i>Check in:</i><br></span><div id="index-lookup" class="basic"><a href="#">Arabic Sources</a>;</div> <a href="http://referenceworks.brillonline.com/search?s.q='+place.eiSearch+'&s.f.s2_parent=s.f.cluster.Encyclopaedia+of+Islam&search-go=Search" target="_blank">Encylopaedia of Islam</a>;<br> <a href="http://pleiades.stoa.org/search?SearchableText='+place.translitSimpleTitle+'" target="_blank">Pleiades</a>; <a href="https://en.wikipedia.org/wiki/Special:Search/'+place.translitSimpleTitle+'" target="_blank">Wikipedia</a></center>');
 	return container[0]; 
 }
 
@@ -228,7 +228,7 @@ function filterPlaces( _needle, _obj, _keys ) {
  * BASEMAP 
  *-----------------------------------------------------*/
 var baseMaps = {
-			"IMIW": baseLayer,
+			"AWMC": baseLayer,
 			};
 			var overlayMaps = {
 				"Routes": routeLayer,

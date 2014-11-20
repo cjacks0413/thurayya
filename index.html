@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>al-Thurayyā Gazetteer: Demo</title>
+		<title>al-Thurayyā Gazetteer Ver. 0.2</title>
 		<link rel="stylesheet" href="map.css">
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<script src="http://d3js.org/topojson.v1.min.js"></script>
@@ -10,14 +10,33 @@
 		<link href='http://fonts.googleapis.com/css?family=Lateef:400,300' rel='stylesheet' type='text/css'>
 		<link href="http://openfontlibrary.org/face/droid-arabic-naskh" rel="stylesheet" type="text/css"/>
 		<link rel="stylesheet" href="heatmap.css" />
-		 <link href='http://fonts.googleapis.com/css?family=Gentium+Basic' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Gentium+Basic' rel='stylesheet' type='text/css'>
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.js"></script>
 		<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.0/mapbox.js'></script>
 	    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.0/mapbox.css' rel='stylesheet' />
+
+
+    <script type="text/javascript">//<![CDATA[
+        // Google Analytics for WordPress by Yoast v4.3.5 | http://yoast.com/wordpress/google-analytics/
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-45427032-1']);
+			            _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    //]]></script>
+
+
 	</head> 
 	<body>
 		<div id="container"></div> 
-		<div id="map-title">al-Thurayyā Gazetteer: Demo</div> 
+		<div id="map-title">al-Thurayyā Gazetteer Ver. 0.2</div> 
 		<div id="index-lookup-content">
 			<div id="close-index" class="close">[X]</div></br>
 			<div class="english">Exact matches in Arabic Sources:</div></br>
@@ -30,7 +49,7 @@
 		<div class='custom-popup' id='map'></div>
 		<div id="search-container">
 			<form id="search">
-				<input type="text" autocomplete="off" placeholder="Place Filter"/>
+				<input type="text" autocomplete="off" placeholder="Search toponyms..."/>
 			</form>
 		<script src="scripts/jquery-1.11.1.js"> </script> 
 		<script src="scripts/leaflet.label.js"></script>
