@@ -21,9 +21,10 @@ var map = new L.Map('map', {
  *----------------------------------------*/ 
 var routeLayer = L.featureGroup(); 
 var routeStyle = {
-    "color": "#ff7800",
-    "weight": 5,
-    "opacity": 0.65
+    "color": "#f00",
+    "weight": 1.5,
+    "opacity": 1, 
+    "smoothFactor" : 2
 };
 routeLayer.addLayer(L.geoJson(allRoutes, { 
 								style: routeStyle})).addTo(map);
